@@ -135,6 +135,21 @@
         padding: 4px 6px !important;
         font-size: 8pt !important;
       }
+      
+      /* Ajustes específicos para las columnas en impresión */
+      th.col-done, td.col-done {
+        display: none !important;
+      }
+      th.col-fase, td.col-fase {
+        width: 10% !important; /* Reducido aún más el ancho de Fase/Entorno */
+      }
+      th.col-duracion, td.col-duracion {
+        width: 6% !important; /* Reducido aún más el ancho de Duración */
+      }
+      th.col-contenidos, td.col-contenidos {
+        width: 45% !important; /* Asignado un ancho mayor explícito para contenidos */
+      }
+      
       @page {
         size: A4 portrait;
         margin: 8mm 10mm;
@@ -243,11 +258,15 @@
           <thead>
             <tr class="bg-slate-950 text-slate-300 border-b border-slate-800 font-bold uppercase tracking-wider text-[10px]">
               <th class="p-2.5 w-10 text-center no-print" title="Arrastrar para ordenar"><i class="fa-solid fa-grip-vertical text-slate-500"></i></th>
-              <th class="p-2.5 w-10 text-center" title="Marcar completado">✓</th>
+              <!-- Añadida clase col-done para ocultar en impresión -->
+              <th class="p-2.5 w-10 text-center col-done" title="Marcar completado">✓</th>
               <th class="p-2.5 w-10 text-center font-mono">N.º</th>
-              <th class="p-2.5 w-40">Fase / Entorno</th>
-              <th class="p-2.5 w-24 text-center">Duración</th>
-              <th class="p-2.5">Contenidos, Explicación y Tareas Clave</th>
+              <!-- Añadida clase col-fase para ajustar ancho en impresión -->
+              <th class="p-2.5 w-40 col-fase">Fase / Entorno</th>
+              <!-- Añadida clase col-duracion para ajustar ancho en impresión -->
+              <th class="p-2.5 w-24 text-center col-duracion">Duración</th>
+              <!-- Añadida clase col-contenidos para ajustar ancho en impresión -->
+              <th class="p-2.5 col-contenidos">Contenidos, Explicación y Tareas Clave</th>
               <th class="p-2.5 w-64">Recursos / Puntos Clave / Preguntas</th>
               <th class="p-2.5 w-10 text-center no-print"></th>
             </tr>
@@ -376,28 +395,29 @@
           `<option value="${f.id}" class="bg-slate-900 text-slate-200" ${step.fase === f.id ? 'selected' : ''}>${f.id}</option>`
         ).join('');
 
+        // Añadidas las clases correspondientes (col-done, col-fase, col-duracion, col-contenidos) a los tds
         tr.innerHTML = `
           <td class="p-2 text-center text-slate-500 hover:text-blue-400 drag-handle no-print transition-colors" draggable="true" title="Arrastrar para reordenar">
             <i class="fa-solid fa-grip-vertical text-sm"></i>
           </td>
-          <td class="p-2 text-center">
+          <td class="p-2 text-center col-done">
             <input type="checkbox" class="step-checkbox rounded bg-slate-800 border-slate-700 text-blue-500 focus:ring-blue-500 focus:ring-offset-slate-900 h-4 w-4 cursor-pointer" ${step.completed ? 'checked' : ''}>
           </td>
           <td class="p-2 text-center font-mono font-bold text-slate-500 step-number">
             ${index + 1}
           </td>
-          <td class="p-2">
+          <td class="p-2 col-fase">
             <select class="step-fase w-full bg-slate-950 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs font-semibold text-slate-200 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
               ${optionsFases}
             </select>
           </td>
-          <td class="p-2 text-center">
+          <td class="p-2 text-center col-duracion">
             <div class="flex items-center justify-center gap-1">
               <input type="number" min="0" step="5" placeholder="min" value="${step.duracion || ''}" class="step-duracion w-14 bg-slate-950 border border-slate-800 rounded-lg px-1.5 py-1.5 text-center font-mono text-xs font-bold text-amber-400 focus:outline-none focus:border-amber-400">
               <span class="text-[10px] text-slate-500 font-bold">m</span>
             </div>
           </td>
-          <td class="p-2">
+          <td class="p-2 col-contenidos">
             <textarea placeholder="Explicación didáctica, demostración, tareas de la brigada..." class="step-contenido step-content-text w-full bg-slate-950/70 border border-slate-800 rounded-lg p-2 text-xs text-slate-100 placeholder-slate-600 focus:outline-none focus:border-blue-500 focus:bg-slate-950 leading-relaxed auto-expand">${escapeHtml(step.contenido)}</textarea>
           </td>
           <td class="p-2">
